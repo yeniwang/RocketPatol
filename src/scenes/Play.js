@@ -10,6 +10,8 @@ class Play extends Phaser.Scene {
         this.load.image('starfield', './assets/starfield.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        // new! load particles
+       // this.load.atlas('flares', 'assets/particles/flares.png', 'assets/particles/flares.json');
     }
 
     create() {
@@ -18,7 +20,7 @@ class Play extends Phaser.Scene {
 
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
-        
+
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
@@ -62,7 +64,10 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(
+            borderUISize + borderPadding, 
+            borderUISize + borderPadding*2, 
+            this.p1Score, scoreConfig);
 
         // GAME OVER flag
         this.gameOver = false;
@@ -74,10 +79,31 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+
+        // New! initialize playTimer
+        var playTimer;
+
+        // New! display timer
+        let timerDisplay = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'left',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        } 
+        this.timeRight = this.add.text(
+            borderTimerSize + borderTimerPadding, 
+            borderUISize + borderPadding*2, 
+            this.playTimer, timerDisplay);
     }
 
     update() {
-        // check key input for restart / menu
+
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
@@ -112,6 +138,9 @@ class Play extends Phaser.Scene {
 
     checkCollision(rocket, ship) {
         // simple AABB checking
+        // to see if two rectangles overlap. 
+        // If they do, the function returns true. 
+        // If not, the function returns false
         if (rocket.x < ship.x + ship.width && 
             rocket.x + rocket.width > ship.x && 
             rocket.y < ship.y + ship.height &&
@@ -133,9 +162,10 @@ class Play extends Phaser.Scene {
             ship.alpha = 1;                       // make ship visible again
             boom.destroy();                       // remove explosion sprite
         });
+
         // score add and repaint
         this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score; 
+        this.scoreLeft.text = this.p1Score;  
         
         this.sound.play('sfx_explosion');
       }

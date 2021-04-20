@@ -11,5 +11,9 @@ let game = new Phaser.Game(config);
 let borderUISize = game.config.height / 15;
 let borderPadding = borderUISize / 3;
 
+// New! set new UI sizes for timer
+let borderTimerSize = game.config.height / 10;
+let borderTimerPadding = borderTimerSize / 5;
+
 // reserve keyboard variables
 let keyF, keyR, keyLEFT, keyRIGHT;

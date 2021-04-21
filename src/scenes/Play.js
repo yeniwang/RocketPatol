@@ -79,27 +79,28 @@ class Play extends Phaser.Scene {
         }, null, this);
 
         // New! initialize playTimer
-        this.playTimer = 0;
+        var playTimer;
 
-        // New! display timer
-        /*let timerDisplay = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'left',
+        let timerDisplay = {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: '#f34185',
+            color: '#f9f7fc',
+            align: 'center',
             padding: {
                 top: 5,
                 bottom: 5,
             },
             fixedWidth: 100
-        } */
-
-        /*this.timeCount = this.clock.getElapsed();
-        this.timeRight = this.add.text(
-            game.config.width - (200 + borderUISize + borderPadding), 
-            borderUISize + 15, 
-            this.timeCount, timerDisplay);*/
+           }
+    
+           if(!this.gameOver) {
+            this.timeCount = Math.floor(this.clock.getRemainingSeconds());
+            this.timeRight = this.add.text(
+                game.config.width - (200 + borderUISize + borderPadding), 
+                borderUISize + 15, 
+                this.timeCount, timerDisplay);
+        }
     }
 
     update() {
@@ -134,10 +135,14 @@ class Play extends Phaser.Scene {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
+
+        // New! represent the game clock, not the timer
+      // this.timeRight.text = 'Timer: ' + Math.round(this.clock.getRemainingSeconds());
+
        // console.log(this.p1Score);
 
        // New! display timer
-       let timerDisplay = {
+       /*let timerDisplay = {
         fontFamily: 'Arial',
         fontSize: '30px',
         backgroundColor: '#f34185',
@@ -151,12 +156,12 @@ class Play extends Phaser.Scene {
        }
 
        if(!this.gameOver) {
-        this.timeCount = this.clock.getRemainingSeconds();
+        this.timeCount = Math.floor(this.clock.getRemainingSeconds());
         this.timeRight = this.add.text(
             game.config.width - (200 + borderUISize + borderPadding), 
             borderUISize + 15, 
             this.timeCount, timerDisplay);
-    }
+    }*/
        
     }
 
@@ -192,5 +197,11 @@ class Play extends Phaser.Scene {
         this.scoreLeft.text = this.p1Score;  
         
         this.sound.play('sfx_explosion');
+        
+        // New! every time you hit a certain ship you get 1 second
+        if(this.playTimer > 0){
+            this.playTimer += 1;
+            this.timeRight.text = this.playTimer;
+            }
       }
 }

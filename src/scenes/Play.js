@@ -18,7 +18,7 @@ class Play extends Phaser.Scene {
         // play bgm
         this.backGroundMusic = this.sound.add('bgm', {loop: true});
         this.backGroundMusic.play();
-        
+
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
@@ -84,9 +84,7 @@ class Play extends Phaser.Scene {
             this.gameOver = true;
         }, null, this);
 
-        // New! initialize playTimer
-        var playTimer;
-
+        // New! display the remaining timer
         let timerDisplay = {
             fontFamily: 'Arial',
             fontSize: '15px',
@@ -99,7 +97,7 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
            }
-    
+
            if(!this.gameOver) {
             this.timeCount = Math.floor(this.clock.getRemainingSeconds());
             this.timeRight = this.add.text(
@@ -107,6 +105,9 @@ class Play extends Phaser.Scene {
                 borderUISize + 15, 
                 this.timeCount, timerDisplay);
         }
+
+        // add sfx sounds
+        this.sfxSounds = ['sfx_explosion', 'sfx_explosion2', 'sfx_explosion3', 'sfx_explosion4'];
     }
 
     update() {
@@ -142,32 +143,8 @@ class Play extends Phaser.Scene {
             this.shipExplode(this.ship01);
         }
 
-        // New! represent the game clock, not the timer
-      // this.timeRight.text = 'Timer: ' + Math.round(this.clock.getRemainingSeconds());
-
-       // console.log(this.p1Score);
-
-       // New! display timer
-       /*let timerDisplay = {
-        fontFamily: 'Arial',
-        fontSize: '30px',
-        backgroundColor: '#f34185',
-        color: '#f9f7fc',
-        align: 'center',
-        padding: {
-            top: 5,
-            bottom: 5,
-        },
-        fixedWidth: 100
-       }
-
-       if(!this.gameOver) {
-        this.timeCount = Math.floor(this.clock.getRemainingSeconds());
-        this.timeRight = this.add.text(
-            game.config.width - (200 + borderUISize + borderPadding), 
-            borderUISize + 15, 
-            this.timeCount, timerDisplay);
-    }*/
+        // New! represent the game clock
+        this.timeRight.text = 'Timer: ' + Math.round(this.clock.getRemainingSeconds());
        
     }
 
@@ -202,12 +179,9 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;  
         
-        this.sound.play('sfx_explosion');
-        
-        // New! every time you hit a certain ship you get 1 second
-        if(this.playTimer > 0){
-            this.playTimer += 1;
-            this.timeRight.text = this.playTimer;
-            }
+        // New! play the sfx sounds
+        let index = Math.floor(Math.random() * this.sfxSounds.length);
+        this.sound.play(this.sfxSounds[index]);
+
       }
 }

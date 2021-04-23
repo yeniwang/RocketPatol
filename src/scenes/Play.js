@@ -17,8 +17,10 @@ class Play extends Phaser.Scene {
 
     create() {
         // play bgm
+        if (!this.gameOver){
         this.backGroundMusic = this.sound.add('bgm', {loop: true});
         this.backGroundMusic.play();
+        }
 
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
@@ -104,8 +106,8 @@ class Play extends Phaser.Scene {
            if(!this.gameOver) {
             this.timeCount = Math.floor(this.clock.getRemainingSeconds());
             this.timeRight = this.add.text(
-                game.config.width - (200 + borderUISize + borderPadding), 
-                borderUISize + 15, 
+                game.config.width - (150 + borderUISize + borderPadding), 
+                borderUISize + 25, 
                 this.timeCount, timerDisplay);
         }
 
